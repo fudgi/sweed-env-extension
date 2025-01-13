@@ -150,7 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // });
 
   innerTest1Btn.addEventListener("click", () => {
-    openTab(`https://inner-test.sweed.app/`);
+    openTab(`https://web-ui-production.sweedpos.com/s3/`);
   });
 
   innerTest2Btn.addEventListener("click", () => {
