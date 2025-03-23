@@ -11,6 +11,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const innerTest1Btn = document.getElementById("innertest1-btn");
   const innerTest2Btn = document.getElementById("innertest2-btn");
+  const primeBtn = document.getElementById("prime-btn");
+  const curaleafBtn = document.getElementById("curaleaf-btn");
 
   const saveState = () => {
     if (!chrome.storage) {
@@ -155,6 +157,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   innerTest2Btn.addEventListener("click", () => {
     openTab(`https://inner-test2.sweed.app/`);
+  });
+
+  primeBtn.addEventListener("click", () => {
+    const { storeId } = getParams();
+    openTab(`https://web-ui-prime.sweedpos.com/s${storeId}`);
+  });
+
+  curaleafBtn.addEventListener("click", () => {
+    const { storeId } = getParams();
+    openTab(`https://web-ui-curaleaf.sweedpos.com/s${storeId}`);
   });
 
   restoreState();
