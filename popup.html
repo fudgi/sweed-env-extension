@@ -1,115 +1,51 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Environment Switcher</title>
-    <link rel="stylesheet" href="styles.css" />
-    <link href="assets/bootstrap.min.css" rel="stylesheet" />
-    <link href="assets/docs.css" rel="stylesheet" />
-    <link href="assets/bootstrap.bundle.min.js" rel="stylesheet" />
-    <script src="assets/bootstrap.bundle.min.js"></script>
-  </head>
-  <body data-bs-theme="dark">
-    
-    <form class="p-3 m-0 border-0 bd-example m-0 border-0" id="env-form">
-      <div>
-        <h3 class="d-inline-block">Environment</h3>
-        <img class="d-inline-block" src="icon.png" width="30px" height="30px"/>
-        
-      </div>
-      <div>
-        <input
-          type="radio"
-          class="btn-check"
-          name="environment"
-          value="dev"
-          id="dev"
-          autocomplete="off"
-          checked=""
-        />
-        <label class="btn" for="dev">DEV</label>
 
-        <input
-          type="radio"
-          class="btn-check"
-          name="environment"
-          value="teste"
-          id="teste"
-          autocomplete="off"
-          checked=""
-        />
-        <label class="btn" for="teste">TEST-E</label>
+<head>
+  <title>Environment Switcher</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="assets/bootstrap.min.css" rel="stylesheet" />
+  <link href="assets/docs.css" rel="stylesheet" />
+  <link href="assets/bootstrap.bundle.min.js" rel="stylesheet" />
+  <script src="assets/bootstrap.bundle.min.js"></script>
+</head>
 
-        <input
-          type="radio"
-          class="btn-check"
-          name="environment"
-          value="feature"
-          id="feature"
-          autocomplete="off"
-          checked=""
-        />
-        <label class="btn" for="feature">FEATURE</label>
+<body data-bs-theme="dark">
 
-        <input
-          type="radio"
-          class="btn-check"
-          name="environment"
-          value="demo"
-          id="demo"
-          autocomplete="off"
-          checked=""
-        />
-        <label class="btn" for="demo">DEMO</label>
+  <form class="p-3 m-0 border-0 bd-example m-0 border-0" id="env-form">
+    <div>
+      <h3 class="d-inline-block">Environment</h3>
+      <img class="d-inline-block" src="icon.png" width="30px" height="30px" />
 
-        <input
-          type="radio"
-          class="btn-check"
-          name="environment"
-          value="prod"
-          id="prod"
-          autocomplete="off"
-          checked=""
-        />
-        <label class="btn" for="prod">PROD</label>
-      </div>
+    </div>
+    <div>
+      <input type="radio" class="btn-check" name="environment" value="dev" id="dev" autocomplete="off" checked="" />
+      <label class="btn" for="dev">DEV</label>
 
-      <div class="divider-m"></div>
+      <input type="radio" class="btn-check" name="environment" value="feature" id="feature" autocomplete="off"
+        checked="" />
+      <label class="btn" for="feature">FEATURE</label>
 
-      <div id="feature-options" style="display: none">
-        <h4 style="font-size: 16px;">Project</h3>
+      <input type="radio" class="btn-check" name="environment" value="demo" id="demo" autocomplete="off" checked="" />
+      <label class="btn" for="demo">DEMO</label>
+
+      <input type="radio" class="btn-check" name="environment" value="prod" id="prod" autocomplete="off" checked="" />
+      <label class="btn" for="prod">PROD</label>
+    </div>
+
+    <div class="divider-m"></div>
+
+    <div id="feature-options" style="display: none">
+      <h4 style="font-size: 16px;">Project</h3>
         <div class="divider-s"></div>
         <div>
-          <input
-            type="radio"
-            class="btn-check"
-            name="project"
-            value="ecom"
-            id="ecom"
-            autocomplete="off"
-            checked=""
-          />
+          <input type="radio" class="btn-check" name="project" value="ecom" id="ecom" autocomplete="off" checked="" />
           <label class="btn" for="ecom">ECOM</label>
 
-          <input
-            type="radio"
-            class="btn-check"
-            name="project"
-            value="ci"
-            id="ci"
-            autocomplete="off"
-            checked=""
-          />
+          <input type="radio" class="btn-check" name="project" value="ci" id="ci" autocomplete="off" checked="" />
           <label class="btn" for="ci">CI</label>
 
-          <input
-            type="radio"
-            class="btn-check"
-            name="project"
-            value="sweed"
-            id="sweed"
-            autocomplete="off"
-            checked=""
-          />
+          <input type="radio" class="btn-check" name="project" value="sweed" id="sweed" autocomplete="off" checked="" />
           <label class="btn" for="sweed">SWEED</label>
         </div>
 
@@ -117,29 +53,17 @@
 
         <div class="input-group mb-3">
           <span class="input-group-text" id="feature-id-span">#</span>
-          <input
-            id="feature-id"
-            name="id"
-            type="number"
-            class="form-control"
-            placeholder="Feature Number"
-          />
+          <input id="feature-id" name="id" type="number" class="form-control" placeholder="Feature Number" />
         </div>
 
         <div class="divider-m"></div>
-      </div>
+    </div>
 
 
-      <h4 style="font-size: 16px;">Store #</h3>
+    <h4 style="font-size: 16px;">Store #</h3>
       <div class="input-group mb-3">
         <span class="input-group-text" id="store-id-span">#</span>
-        <input
-          id="store-id"
-          name="store-id"
-          type="number"
-          class="form-control"
-          placeholder="Store #"
-        />
+        <input id="store-id" name="store-id" type="number" class="form-control" placeholder="Store #" />
       </div>
 
       <button type="button" class="btn btn-info mx-0" id="portal-btn">Portal</button>
@@ -149,9 +73,7 @@
       <button type="button" class="btn btn-info mx-0" id="old-shop-btn">
         Old Shop
       </button>
-      <!-- <button type="button" class="btn btn-info" id="marketing-jobs-btn" disabled>
-        Marketing Jobs
-      </button> -->
+
       <div id="prod-options" style="display: none" class="p-3 m-0 border-0 bd-example m-0 border-0">
         <div class="row gx-2 mb-2 mt-1">
           <div class="col-6">
@@ -170,10 +92,11 @@
           </div>
         </div>
       </div>
-      
-      
-    </form>
 
-    <script src="popup.js"></script>
-  </body>
+
+  </form>
+
+  <script src="popup.js"></script>
+</body>
+
 </html>
