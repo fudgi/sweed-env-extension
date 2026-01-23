@@ -136,9 +136,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const AppPrefix = {
     shop: "web-ui",
-    cashier: "cashier-v2",
-    kiosk: "kiosk",
-    secondScreen: "second-screen",
+    cashier: "cashier",
+    kiosk: "web-ui-kiosk",
+    secondScreen: "web-ui-2ndscreen",
   };
 
   const openApp = (appType) => {
@@ -146,10 +146,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const { project, id, storeId } = getParams();
     const prefix = AppPrefix[appType];
 
+    if (appType === "cashier") {
+      if (env === Env.prod) {
+        openTab(`https://${prefix}.sweedpos.com/`);
+      } else if (env === Env.feature) {
+        openTab(
+          `https://${prefix}-${env}-${project}-${id}.sweedpos.com/logout`
+        );
+      } else if (env === Env.prime || env === Env.curaleaf) {
+        openTab(`https://${prefix}-${env}.sweedpos.com/logout`);
+      } else {
+        openTab(`https://${prefix}-${env}.sweedpos.com/`);
+      }
+      return;
+    }
+
     if (env === Env.feature) {
-      openTab(`https://${prefix}-${env}-${project}-${id}.sweedpos.com/s${storeId}`);
+      openTab(
+        `https://${prefix}-${env}-${project}-${id}.sweedpos.com/s${storeId}`
+      );
     } else if (env === Env.prod) {
       openTab(`https://${prefix}-production.sweedpos.com/s${storeId}`);
+    } else if (env === Env.pilot) {
+      openTab(
+        `https://${prefix}-${env}.sweedpos.com/s${storeId}${appType === "kiosk" ? "/welcome" : ""
+        }`
+      );
     } else if (env === Env.prime || env === Env.curaleaf) {
       openTab(`https://${prefix}-${env}.sweedpos.com/s${storeId}`);
     } else {
@@ -173,10 +195,5 @@ document.addEventListener("DOMContentLoaded", () => {
   cashierBtn.addEventListener("click", () => openApp("cashier"));
   kioskBtn.addEventListener("click", () => openApp("kiosk"));
   secondScreenBtn.addEventListener("click", () => openApp("secondScreen"));
-
-
-
-
-
   restoreState();
 });
