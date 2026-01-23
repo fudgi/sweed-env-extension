@@ -2,6 +2,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const Env = {
     dev: "dev",
     feature: "feature",
+    demo: "demo",
+    pilot: "pilot",
+    stage: "stage",
     prod: "prod",
     prime: "prime",
     curaleaf: "curaleaf",
@@ -9,15 +12,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const envForm = document.getElementById("env-form");
   const featureOptions = document.getElementById("feature-options");
-  const prodOptions = document.getElementById("prod-options");
   const portalBtn = document.getElementById("portal-btn");
-  const newShopBtn = document.getElementById("new-shop-btn");
-  const oldShopBtn = document.getElementById("old-shop-btn");
+  const cashierBtn = document.getElementById("cashier-btn");
+  const shopBtn = document.getElementById("shop-btn");
+  const kioskBtn = document.getElementById("kiosk-btn");
+  const secondScreenBtn = document.getElementById("second-screen-btn");
   const idInput = document.getElementById("feature-id");
   const storeInput = document.getElementById("store-id");
 
-  const primeBtn = document.getElementById("prime-btn");
-  const curaleafBtn = document.getElementById("curaleaf-btn");
 
   const saveState = () => {
     if (!chrome.storage) {
@@ -45,19 +47,19 @@ document.addEventListener("DOMContentLoaded", () => {
     chrome.storage?.local.get("state", (data) => {
       if (data.state) {
         if (data.state.environment) {
-          document.querySelector(
+          const radio = document.querySelector(
             `input[name="environment"][value="${data.state.environment}"]`
-          ).checked = true;
+          );
+          if (radio) radio.checked = true;
           if (data.state.environment === Env.feature) {
             featureOptions.style.display = "block";
-          } else if (data.state.environment === Env.prod) {
-            prodOptions.style.display = "contents";
           }
         }
         if (data.state.project) {
-          document.querySelector(
+          const projectRadio = document.querySelector(
             `input[name="project"][value="${data.state.project}"]`
-          ).checked = true;
+          );
+          if (projectRadio) projectRadio.checked = true;
         }
         if (data.state.id) {
           idInput.value = data.state.id;
@@ -78,8 +80,6 @@ document.addEventListener("DOMContentLoaded", () => {
     radio.addEventListener("change", () => {
       featureOptions.style.display =
         radio.value === Env.feature ? "block" : "none";
-
-      prodOptions.style.display = radio.value === Env.prod ? "contents" : "none";
 
       saveState();
     });
@@ -102,11 +102,36 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const getParams = () => {
+    let storeId = storeInput.value;
+    if (!storeId) storeId = "63";
     return {
       project: envForm.project ? envForm.project.value : null,
       id: idInput.value,
-      storeId: storeInput.value,
+      storeId: storeId,
     };
+  };
+
+  const AppPrefix = {
+    shop: "web-ui",
+    cashier: "cashier-v2",
+    kiosk: "kiosk",
+    secondScreen: "second-screen",
+  };
+
+  const openApp = (appType) => {
+    const env = getSelectedEnvironment();
+    const { project, id, storeId } = getParams();
+    const prefix = AppPrefix[appType];
+
+    if (env === Env.feature) {
+      openTab(`https://${prefix}-${env}-${project}-${id}.sweedpos.com/s${storeId}`);
+    } else if (env === Env.prod) {
+      openTab(`https://${prefix}-production.sweedpos.com/s${storeId}`);
+    } else if (env === Env.prime || env === Env.curaleaf) {
+      openTab(`https://${prefix}-${env}.sweedpos.com/s${storeId}`);
+    } else {
+      openTab(`https://${prefix}-${env}.sweedpos.com/s${storeId}`);
+    }
   };
 
   portalBtn.addEventListener("click", () => {
@@ -121,45 +146,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  newShopBtn.addEventListener("click", () => {
-    const env = getSelectedEnvironment();
-    const { project, id, storeId } = getParams();
-    if (!storeId) storeId = 63;
-    if (env === Env.feature) {
-      openTab(
-        `https://web-ui-${env}-${project}-${id}.sweedpos.com/s${storeId}`
-      );
-    } else if (env === Env.prod) {
-      openTab(`https://web-ui-production.sweedpos.com/s${storeId}`);
-    } else {
-      openTab(`https://web-ui-${env}.sweedpos.com/s${storeId}`);
-    }
-  });
-
-  oldShopBtn.addEventListener("click", () => {
-    const env = getSelectedEnvironment();
-    const { project, id, storeId } = getParams();
-    if (!storeId) storeId = 63;
-    if (env === Env.feature) {
-      openTab(`https://${env}-${project}-${id}.sweed.app?sid=${storeId}`);
-    } else if (env === Env.prod) {
-      openTab(`https://sweed.app/?sid=${storeId}`);
-    } else {
-      openTab(`https://${env}.sweed.app?sid=${storeId}`);
-    }
-  });
+  shopBtn.addEventListener("click", () => openApp("shop"));
+  cashierBtn.addEventListener("click", () => openApp("cashier"));
+  kioskBtn.addEventListener("click", () => openApp("kiosk"));
+  secondScreenBtn.addEventListener("click", () => openApp("secondScreen"));
 
 
 
-  primeBtn.addEventListener("click", () => {
-    const { storeId } = getParams();
-    openTab(`https://web-ui-prime.sweedpos.com/s${storeId}`);
-  });
 
-  curaleafBtn.addEventListener("click", () => {
-    const { storeId } = getParams();
-    openTab(`https://web-ui-curaleaf.sweedpos.com/s${storeId}`);
-  });
 
   restoreState();
 });

@@ -18,82 +18,101 @@
       <img class="d-inline-block" src="icon.png" width="30px" height="30px" />
 
     </div>
-    <div>
-      <input type="radio" class="btn-check" name="environment" value="dev" id="dev" autocomplete="off" checked="" />
-      <label class="btn" for="dev">DEV</label>
-
-      <input type="radio" class="btn-check" name="environment" value="feature" id="feature" autocomplete="off"
-        checked="" />
-      <label class="btn" for="feature">FEATURE</label>
-
-      <input type="radio" class="btn-check" name="environment" value="demo" id="demo" autocomplete="off" checked="" />
-      <label class="btn" for="demo">DEMO</label>
-
-      <input type="radio" class="btn-check" name="environment" value="prod" id="prod" autocomplete="off" checked="" />
-      <label class="btn" for="prod">PROD</label>
+    <h6 class="text-uppercase text-body-secondary mb-2">Development</h6>
+    <div class="row gx-1">
+      <div class="col-12">
+        <input type="radio" class="btn-check" name="environment" value="feature" id="feature" autocomplete="off" />
+        <label class="btn btn-outline-info w-100" for="feature">FEATURE</label>
+      </div>
+    </div>
+    <div class="row gx-1">
+      <div class="col-3">
+        <input type="radio" class="btn-check" name="environment" value="stage" id="stage" autocomplete="off" />
+        <label class="btn btn-outline-info w-100" for="stage">STAGE</label>
+      </div>
+      <div class="col-3">
+        <input type="radio" class="btn-check" name="environment" value="dev" id="dev" autocomplete="off" />
+        <label class="btn btn-outline-info w-100" for="dev">DEV</label>
+      </div>
+      <div class="col-3">
+        <input type="radio" class="btn-check" name="environment" value="demo" id="demo" autocomplete="off" />
+        <label class="btn btn-outline-info w-100" for="demo">DEMO</label>
+      </div>
+      <div class="col-3">
+        <input type="radio" class="btn-check" name="environment" value="pilot" id="pilot" autocomplete="off" />
+        <label class="btn btn-outline-info w-100" for="pilot">PILOT</label>
+      </div>
     </div>
 
     <div class="divider-m"></div>
 
+    <h6 class="text-uppercase text-body-secondary mb-2">Live</h6>
+    <div class="row gx-1">
+      <div class="col-5">
+        <input type="radio" class="btn-check" name="environment" value="prod" id="prod" autocomplete="off" />
+        <label class="btn btn-outline-info w-100" for="prod">PRODUCTION</label>
+      </div>
+      <div class="col-3">
+        <input type="radio" class="btn-check" name="environment" value="prime" id="prime" autocomplete="off" />
+        <label class="btn btn-outline-info w-100" for="prime">PRIME</label>
+      </div>
+      <div class="col-4">
+        <input type="radio" class="btn-check" name="environment" value="curaleaf" id="curaleaf" autocomplete="off" />
+        <label class="btn btn-outline-info w-100" for="curaleaf">CURALEAF</label>
+      </div>
+    </div>
+    <div class="divider-m"></div>
+
     <div id="feature-options" style="display: none">
-      <h4 style="font-size: 16px;">Project</h3>
-        <div class="divider-s"></div>
-        <div>
-          <input type="radio" class="btn-check" name="project" value="ecom" id="ecom" autocomplete="off" checked="" />
-          <label class="btn" for="ecom">ECOM</label>
+      <h6 class="mb-2">Project</h6>
+      <div class="divider-s"></div>
+      <div>
+        <input type="radio" class="btn-check" name="project" value="ecom" id="ecom" autocomplete="off" checked="" />
+        <label class="btn btn-outline-info" for="ecom">ECOM</label>
 
-          <input type="radio" class="btn-check" name="project" value="ci" id="ci" autocomplete="off" checked="" />
-          <label class="btn" for="ci">CI</label>
+        <input type="radio" class="btn-check" name="project" value="ci" id="ci" autocomplete="off" checked="" />
+        <label class="btn btn-outline-info" for="ci">CI</label>
 
-          <input type="radio" class="btn-check" name="project" value="sweed" id="sweed" autocomplete="off" checked="" />
-          <label class="btn" for="sweed">SWEED</label>
-        </div>
+        <input type="radio" class="btn-check" name="project" value="sweed" id="sweed" autocomplete="off" checked="" />
+        <label class="btn btn-outline-info" for="sweed">SWEED</label>
+      </div>
 
-        <div class="divider-s"></div>
+      <div class="divider-s"></div>
 
-        <div class="input-group mb-3">
-          <span class="input-group-text" id="feature-id-span">#</span>
-          <input id="feature-id" name="id" type="number" class="form-control" placeholder="Feature Number" />
-        </div>
+      <div class="input-group mb-3">
+        <span class="input-group-text" id="feature-id-span">#</span>
+        <input id="feature-id" name="id" type="number" class="form-control" placeholder="Feature Number" />
+      </div>
 
-        <div class="divider-m"></div>
+      <div class="divider-m"></div>
     </div>
 
 
-    <h4 style="font-size: 16px;">Store #</h3>
-      <div class="input-group mb-3">
-        <span class="input-group-text" id="store-id-span">#</span>
-        <input id="store-id" name="store-id" type="number" class="form-control" placeholder="Store #" />
-      </div>
+    <h6 class="mb-2">Store #</h6>
+    <div class="input-group mb-3">
+      <span class="input-group-text" id="store-id-span">#</span>
+      <input id="store-id" name="store-id" type="number" class="form-control" placeholder="Store #" />
+    </div>
 
-      <button type="button" class="btn btn-info mx-0" id="portal-btn">Portal</button>
-      <button type="button" class="btn btn-info mx-0" id="new-shop-btn">
-        New Shop
-      </button>
-      <button type="button" class="btn btn-info mx-0" id="old-shop-btn">
-        Old Shop
-      </button>
-
-      <div id="prod-options" style="display: none" class="p-3 m-0 border-0 bd-example m-0 border-0">
-        <div class="row gx-2 mb-2 mt-1">
-          <div class="col-6">
-            <button type="button" class="btn btn-info w-100" id="innertest1-btn">Inner Test</button>
-          </div>
-          <div class="col-6">
-            <button type="button" class="btn btn-info w-100" id="innertest2-btn">Inner Test 2</button>
-          </div>
+    <div class="d-grid gap-2">
+      <button type="button" class="btn btn-info" id="portal-btn">Portal</button>
+      <div class="row gx-2">
+        <div class="col-6">
+          <button type="button" class="btn btn-info w-100" id="cashier-btn">Cashier</button>
         </div>
-        <div class="row gx-2">
-          <div class="col-6">
-            <button type="button" class="btn btn-info w-100" id="prime-btn">Prime</button>
-          </div>
-          <div class="col-6">
-            <button type="button" class="btn btn-info w-100" id="curaleaf-btn">Curaleaf</button>
-          </div>
+        <div class="col-6">
+          <button type="button" class="btn btn-info w-100" id="shop-btn">Shop</button>
         </div>
       </div>
-
-
+      <div class="row gx-2">
+        <div class="col-6">
+          <button type="button" class="btn btn-info w-100" id="kiosk-btn">Kiosk 2.0</button>
+        </div>
+        <div class="col-6">
+          <button type="button" class="btn btn-info w-100" id="second-screen-btn">Second Screen</button>
+        </div>
+      </div>
+    </div>
   </form>
 
   <script src="popup.js"></script>
