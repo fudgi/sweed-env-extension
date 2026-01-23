@@ -10,6 +10,17 @@ document.addEventListener("DOMContentLoaded", () => {
     curaleaf: "curaleaf",
   };
 
+  const EnvTheme = {
+    [Env.feature]: { color: "var(--bs-info)", text: "var(--bs-black)" },
+    [Env.stage]: { color: "#fd7e14", text: "var(--bs-white)" },
+    [Env.dev]: { color: "#6f42c1", text: "var(--bs-white)" },
+    [Env.demo]: { color: "var(--bs-warning)", text: "var(--bs-black)" },
+    [Env.pilot]: { color: "var(--bs-light)", text: "var(--bs-black)" },
+    [Env.prod]: { color: "var(--bs-primary)", text: "var(--bs-white)" },
+    [Env.prime]: { color: "var(--bs-danger)", text: "var(--bs-white)" },
+    [Env.curaleaf]: { color: "var(--bs-success)", text: "var(--bs-white)" },
+  };
+
   const envForm = document.getElementById("env-form");
   const featureOptions = document.getElementById("feature-options");
   const portalBtn = document.getElementById("portal-btn");
@@ -17,8 +28,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const shopBtn = document.getElementById("shop-btn");
   const kioskBtn = document.getElementById("kiosk-btn");
   const secondScreenBtn = document.getElementById("second-screen-btn");
+
   const idInput = document.getElementById("feature-id");
   const storeInput = document.getElementById("store-id");
+
+  const updateActionButtons = () => {
+    const env = document.querySelector('input[name="environment"]:checked')?.value || Env.dev;
+    const theme = EnvTheme[env] || EnvTheme[Env.dev];
+
+    document.documentElement.style.setProperty("--theme-color", theme.color);
+    document.documentElement.style.setProperty("--theme-text-color", theme.text);
+  };
 
 
   const saveState = () => {
@@ -55,6 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
             featureOptions.style.display = "block";
           }
         }
+        updateActionButtons();
         if (data.state.project) {
           const projectRadio = document.querySelector(
             `input[name="project"][value="${data.state.project}"]`
@@ -72,6 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
           `input[name="environment"][value="${Env.dev}"]`
         ).checked = true;
         storeInput.value = "63";
+        updateActionButtons();
       }
     });
   };
@@ -81,6 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
       featureOptions.style.display =
         radio.value === Env.feature ? "block" : "none";
 
+      updateActionButtons();
       saveState();
     });
   });

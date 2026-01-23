@@ -3,10 +3,10 @@
 
 <head>
   <title>Environment Switcher</title>
-  <link rel="stylesheet" href="styles.css" />
   <link href="assets/bootstrap.min.css" rel="stylesheet" />
   <link href="assets/docs.css" rel="stylesheet" />
   <link href="assets/bootstrap.bundle.min.js" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
   <script src="assets/bootstrap.bundle.min.js"></script>
 </head>
 
@@ -28,19 +28,19 @@
     <div class="row gx-1">
       <div class="col-3">
         <input type="radio" class="btn-check" name="environment" value="stage" id="stage" autocomplete="off" />
-        <label class="btn btn-outline-info w-100" for="stage">STAGE</label>
+        <label class="btn btn-outline-orange w-100" for="stage">STAGE</label>
       </div>
       <div class="col-3">
         <input type="radio" class="btn-check" name="environment" value="dev" id="dev" autocomplete="off" />
-        <label class="btn btn-outline-info w-100" for="dev">DEV</label>
+        <label class="btn btn-outline-purple w-100" for="dev">DEV</label>
       </div>
       <div class="col-3">
         <input type="radio" class="btn-check" name="environment" value="demo" id="demo" autocomplete="off" />
-        <label class="btn btn-outline-info w-100" for="demo">DEMO</label>
+        <label class="btn btn-outline-warning w-100" for="demo">DEMO</label>
       </div>
       <div class="col-3">
         <input type="radio" class="btn-check" name="environment" value="pilot" id="pilot" autocomplete="off" />
-        <label class="btn btn-outline-info w-100" for="pilot">PILOT</label>
+        <label class="btn btn-outline-light w-100" for="pilot">PILOT</label>
       </div>
     </div>
 
@@ -50,15 +50,15 @@
     <div class="row gx-1">
       <div class="col-5">
         <input type="radio" class="btn-check" name="environment" value="prod" id="prod" autocomplete="off" />
-        <label class="btn btn-outline-info w-100" for="prod">PRODUCTION</label>
+        <label class="btn btn-outline-primary w-100" for="prod">PRODUCTION</label>
       </div>
       <div class="col-3">
         <input type="radio" class="btn-check" name="environment" value="prime" id="prime" autocomplete="off" />
-        <label class="btn btn-outline-info w-100" for="prime">PRIME</label>
+        <label class="btn btn-outline-danger w-100" for="prime">PRIME</label>
       </div>
       <div class="col-4">
         <input type="radio" class="btn-check" name="environment" value="curaleaf" id="curaleaf" autocomplete="off" />
-        <label class="btn btn-outline-info w-100" for="curaleaf">CURALEAF</label>
+        <label class="btn btn-outline-success w-100" for="curaleaf">CURALEAF</label>
       </div>
     </div>
     <div class="divider-m"></div>
@@ -94,22 +94,22 @@
       <input id="store-id" name="store-id" type="number" class="form-control" placeholder="Store #" />
     </div>
 
-    <div class="d-grid gap-2">
-      <button type="button" class="btn btn-info" id="portal-btn">Portal</button>
+    <div class="d-grid gap-1">
+      <button type="button" class="btn btn-theme" id="portal-btn">Portal</button>
       <div class="row gx-2">
         <div class="col-6">
-          <button type="button" class="btn btn-info w-100" id="cashier-btn">Cashier</button>
+          <button type="button" class="btn btn-theme w-100" id="cashier-btn">Cashier</button>
         </div>
         <div class="col-6">
-          <button type="button" class="btn btn-info w-100" id="shop-btn">Shop</button>
+          <button type="button" class="btn btn-theme w-100" id="shop-btn">Shop</button>
         </div>
       </div>
       <div class="row gx-2">
         <div class="col-6">
-          <button type="button" class="btn btn-info w-100" id="kiosk-btn">Kiosk 2.0</button>
+          <button type="button" class="btn btn-theme w-100" id="kiosk-btn">Kiosk 2.0</button>
         </div>
         <div class="col-6">
-          <button type="button" class="btn btn-info w-100" id="second-screen-btn">Second Screen</button>
+          <button type="button" class="btn btn-theme w-100" id="second-screen-btn">Second Screen</button>
         </div>
       </div>
     </div>
