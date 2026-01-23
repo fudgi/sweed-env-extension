@@ -1,17 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const EnvNames = {
-    development: {
-      DEV: "dev",
-      FEATURE: "feature",
-      INNERTEST1: "innertest1",
-      INNERTEST2: "innertest2",
-    },
-    production: {
-      PROD: "prod",
-      PRODUCTION: "production",
-      PRIME: "prime",
-      CURALEAF: "curaleaf",
-    },
+  const Env = {
+    dev: "dev",
+    feature: "feature",
+    prod: "prod",
+    prime: "prime",
+    curaleaf: "curaleaf",
   };
 
   const envForm = document.getElementById("env-form");
@@ -23,8 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const idInput = document.getElementById("feature-id");
   const storeInput = document.getElementById("store-id");
 
-  const innerTest1Btn = document.getElementById("innertest1-btn");
-  const innerTest2Btn = document.getElementById("innertest2-btn");
   const primeBtn = document.getElementById("prime-btn");
   const curaleafBtn = document.getElementById("curaleaf-btn");
 
@@ -45,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const restoreState = () => {
     if (!chrome.storage) {
       document.querySelector(
-        `input[name="environment"][value="${EnvNames.development.DEV}"]`
+        `input[name="environment"][value="${Env.dev}"]`
       ).checked = true;
       storeInput.value = "63";
       return;
@@ -57,9 +48,9 @@ document.addEventListener("DOMContentLoaded", () => {
           document.querySelector(
             `input[name="environment"][value="${data.state.environment}"]`
           ).checked = true;
-          if (data.state.environment === EnvNames.development.FEATURE) {
+          if (data.state.environment === Env.feature) {
             featureOptions.style.display = "block";
-          } else if (data.state.environment === EnvNames.production.PROD) {
+          } else if (data.state.environment === Env.prod) {
             prodOptions.style.display = "contents";
           }
         }
@@ -76,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       } else {
         document.querySelector(
-          `input[name="environment"][value="${EnvNames.development.DEV}"]`
+          `input[name="environment"][value="${Env.dev}"]`
         ).checked = true;
         storeInput.value = "63";
       }
@@ -86,9 +77,9 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll('input[name="environment"]').forEach((radio) => {
     radio.addEventListener("change", () => {
       featureOptions.style.display =
-        radio.value === EnvNames.development.FEATURE ? "block" : "none";
+        radio.value === Env.feature ? "block" : "none";
 
-      prodOptions.style.display = radio.value === EnvNames.production.PROD ? "contents" : "none";
+      prodOptions.style.display = radio.value === Env.prod ? "contents" : "none";
 
       saveState();
     });
@@ -121,9 +112,9 @@ document.addEventListener("DOMContentLoaded", () => {
   portalBtn.addEventListener("click", () => {
     const env = getSelectedEnvironment();
     const { project, id } = getParams();
-    if (env === EnvNames.development.FEATURE) {
+    if (env === Env.feature) {
       openTab(`https://${env}-${project}-${id}.sweedpos.com`);
-    } else if (env === EnvNames.production.PROD) {
+    } else if (env === Env.prod) {
       openTab(`https://store.sweedpos.com`);
     } else {
       openTab(`https://${env}.sweedpos.com`);
@@ -134,12 +125,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const env = getSelectedEnvironment();
     const { project, id, storeId } = getParams();
     if (!storeId) storeId = 63;
-    if (env === EnvNames.development.FEATURE) {
+    if (env === Env.feature) {
       openTab(
         `https://web-ui-${env}-${project}-${id}.sweedpos.com/s${storeId}`
       );
-    } else if (env === EnvNames.production.PROD) {
-      openTab(`https://web-ui-${EnvNames.production.PRODUCTION}.sweedpos.com/s${storeId}`);
+    } else if (env === Env.prod) {
+      openTab(`https://web-ui-production.sweedpos.com/s${storeId}`);
     } else {
       openTab(`https://web-ui-${env}.sweedpos.com/s${storeId}`);
     }
@@ -149,22 +140,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const env = getSelectedEnvironment();
     const { project, id, storeId } = getParams();
     if (!storeId) storeId = 63;
-    if (env === EnvNames.development.FEATURE) {
+    if (env === Env.feature) {
       openTab(`https://${env}-${project}-${id}.sweed.app?sid=${storeId}`);
-    } else if (env === EnvNames.production.PROD) {
+    } else if (env === Env.prod) {
       openTab(`https://sweed.app/?sid=${storeId}`);
     } else {
       openTab(`https://${env}.sweed.app?sid=${storeId}`);
     }
   });
 
-  innerTest1Btn.addEventListener("click", () => {
-    openTab(`https://web-ui-production.sweedpos.com/s3/`);
-  });
 
-  innerTest2Btn.addEventListener("click", () => {
-    openTab(`https://inner-test2.sweed.app/`);
-  });
 
   primeBtn.addEventListener("click", () => {
     const { storeId } = getParams();
