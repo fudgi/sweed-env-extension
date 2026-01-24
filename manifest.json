@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Environment Switcher",
-  "version": "1.4",
+  "version": "2.0",
   "description": "Open different environments based on the selection",
   "permissions": [
     "storage"
