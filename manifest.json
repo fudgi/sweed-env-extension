@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Environment Switcher",
+  "name": "EnvSwitcher",
   "version": "2.0",
   "description": "Open different environments based on the selection",
   "permissions": [
@@ -9,6 +9,11 @@
   "action": {
     "default_popup": "popup.html",
     "default_icon": "icon.png"
+  },
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
   },
   "web_accessible_resources": [
     {

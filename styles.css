@@ -5,7 +5,7 @@ body {
   max-width: 800px;
   max-height: 600px;
   height: 550px;
-  filter: brightness(0.8) grayscale(0.2);
+  filter: brightness(0.9) grayscale(0.2);
 }
 
 h3 {
