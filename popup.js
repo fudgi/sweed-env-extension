@@ -33,6 +33,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const storeInput = document.getElementById("store-id");
   const projectInput = document.getElementById("project-name");
 
+  const actionButtons = [
+    portalBtn,
+    cashierBtn,
+    shopBtn,
+    kioskBtn,
+    secondScreenBtn,
+  ];
+
   const updateActionButtons = () => {
     const env =
       document.querySelector('input[name="environment"]:checked')?.value ||
@@ -44,6 +52,15 @@ document.addEventListener("DOMContentLoaded", () => {
       "--theme-text-color",
       theme.text,
     );
+
+    // Disable buttons if feature env and missing project/ticket
+    const shouldDisable =
+      env === Env.feature &&
+      (!projectInput.value.trim() || !idInput.value.trim());
+
+    actionButtons.forEach((btn) => {
+      btn.disabled = shouldDisable;
+    });
   };
 
   const saveState = () => {
@@ -110,8 +127,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  projectInput.addEventListener("input", saveState);
-  idInput.addEventListener("input", saveState);
+  projectInput.addEventListener("input", () => {
+    projectInput.classList.remove("is-invalid");
+    updateActionButtons();
+    saveState();
+  });
+  idInput.addEventListener("input", () => {
+    idInput.classList.remove("is-invalid");
+    updateActionButtons();
+    saveState();
+  });
   storeInput.addEventListener("input", saveState);
 
   const openTab = (url) => {
@@ -141,14 +166,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     return isValid;
   };
-
-  // Clear validation on input
-  idInput.addEventListener("input", () => {
-    idInput.classList.remove("is-invalid");
-  });
-  projectInput.addEventListener("input", () => {
-    projectInput.classList.remove("is-invalid");
-  });
 
   const getSelectedEnvironment = () => {
     return envForm.environment.value;
