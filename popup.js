@@ -31,15 +31,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const idInput = document.getElementById("feature-id");
   const storeInput = document.getElementById("store-id");
+  const projectInput = document.getElementById("project-name");
 
   const updateActionButtons = () => {
-    const env = document.querySelector('input[name="environment"]:checked')?.value || Env.dev;
+    const env =
+      document.querySelector('input[name="environment"]:checked')?.value ||
+      Env.dev;
     const theme = EnvTheme[env] || EnvTheme[Env.dev];
 
     document.documentElement.style.setProperty("--theme-color", theme.color);
-    document.documentElement.style.setProperty("--theme-text-color", theme.text);
+    document.documentElement.style.setProperty(
+      "--theme-text-color",
+      theme.text,
+    );
   };
-
 
   const saveState = () => {
     if (!chrome.storage) {
@@ -48,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const state = {
       environment: envForm.environment.value,
-      project: envForm.project ? envForm.project.value : null,
+      project: projectInput.value,
       id: idInput.value,
       storeId: storeInput.value,
     };
@@ -58,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const restoreState = () => {
     if (!chrome.storage) {
       document.querySelector(
-        `input[name="environment"][value="${Env.dev}"]`
+        `input[name="environment"][value="${Env.dev}"]`,
       ).checked = true;
       storeInput.value = "63";
       return;
@@ -68,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (data.state) {
         if (data.state.environment) {
           const radio = document.querySelector(
-            `input[name="environment"][value="${data.state.environment}"]`
+            `input[name="environment"][value="${data.state.environment}"]`,
           );
           if (radio) radio.checked = true;
           if (data.state.environment === Env.feature) {
@@ -77,10 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         updateActionButtons();
         if (data.state.project) {
-          const projectRadio = document.querySelector(
-            `input[name="project"][value="${data.state.project}"]`
-          );
-          if (projectRadio) projectRadio.checked = true;
+          projectInput.value = data.state.project;
         }
         if (data.state.id) {
           idInput.value = data.state.id;
@@ -90,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       } else {
         document.querySelector(
-          `input[name="environment"][value="${Env.dev}"]`
+          `input[name="environment"][value="${Env.dev}"]`,
         ).checked = true;
         storeInput.value = "63";
         updateActionButtons();
@@ -108,10 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  document.querySelectorAll('input[name="project"]').forEach((radio) => {
-    radio.addEventListener("change", saveState);
-  });
-
+  projectInput.addEventListener("input", saveState);
   idInput.addEventListener("input", saveState);
   storeInput.addEventListener("input", saveState);
 
@@ -119,6 +118,37 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log(url);
     chrome.tabs.create({ url });
   };
+
+  const validateFeatureInputs = () => {
+    const env = getSelectedEnvironment();
+    if (env !== Env.feature) return true;
+
+    let isValid = true;
+
+    if (!idInput.value.trim()) {
+      idInput.classList.add("is-invalid");
+      isValid = false;
+    } else {
+      idInput.classList.remove("is-invalid");
+    }
+
+    if (!projectInput.value.trim()) {
+      projectInput.classList.add("is-invalid");
+      isValid = false;
+    } else {
+      projectInput.classList.remove("is-invalid");
+    }
+
+    return isValid;
+  };
+
+  // Clear validation on input
+  idInput.addEventListener("input", () => {
+    idInput.classList.remove("is-invalid");
+  });
+  projectInput.addEventListener("input", () => {
+    projectInput.classList.remove("is-invalid");
+  });
 
   const getSelectedEnvironment = () => {
     return envForm.environment.value;
@@ -128,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let storeId = storeInput.value;
     if (!storeId) storeId = "63";
     return {
-      project: envForm.project ? envForm.project.value : null,
+      project: projectInput.value,
       id: idInput.value,
       storeId: storeId,
     };
@@ -142,6 +172,8 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const openApp = (appType) => {
+    if (!validateFeatureInputs()) return;
+
     const env = getSelectedEnvironment();
     const { project, id, storeId } = getParams();
     const prefix = AppPrefix[appType];
@@ -151,7 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
         openTab(`https://${prefix}.sweedpos.com/`);
       } else if (env === Env.feature) {
         openTab(
-          `https://${prefix}-${env}-${project}-${id}.sweedpos.com/logout`
+          `https://${prefix}-${env}-${project}-${id}.sweedpos.com/logout`,
         );
       } else if (env === Env.prime || env === Env.curaleaf) {
         openTab(`https://${prefix}-${env}.sweedpos.com/logout`);
@@ -163,14 +195,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (env === Env.feature) {
       openTab(
-        `https://${prefix}-${env}-${project}-${id}.sweedpos.com/s${storeId}`
+        `https://${prefix}-${env}-${project}-${id}.sweedpos.com/s${storeId}`,
       );
     } else if (env === Env.prod) {
       openTab(`https://${prefix}-production.sweedpos.com/s${storeId}`);
     } else if (env === Env.pilot) {
       openTab(
-        `https://${prefix}-${env}.sweedpos.com/s${storeId}${appType === "kiosk" ? "/welcome" : ""
-        }`
+        `https://${prefix}-${env}.sweedpos.com/s${storeId}${
+          appType === "kiosk" ? "/welcome" : ""
+        }`,
       );
     } else if (env === Env.prime || env === Env.curaleaf) {
       openTab(`https://${prefix}-${env}.sweedpos.com/s${storeId}`);
@@ -180,6 +213,8 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   portalBtn.addEventListener("click", () => {
+    if (!validateFeatureInputs()) return;
+
     const env = getSelectedEnvironment();
     const { project, id } = getParams();
     if (env === Env.feature) {
