@@ -85,6 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
         `input[name="environment"][value="${Env.dev}"]`,
       ).checked = true;
       storeInput.value = "63";
+      updateActionButtons();
       return;
     }
 
@@ -99,7 +100,6 @@ document.addEventListener("DOMContentLoaded", () => {
             featureOptions.style.display = "block";
           }
         }
-        updateActionButtons();
         if (data.state.project) {
           projectInput.value = data.state.project;
         }
@@ -109,6 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (data.state.storeId) {
           storeInput.value = data.state.storeId;
         }
+        updateActionButtons();
       } else {
         document.querySelector(
           `input[name="environment"][value="${Env.dev}"]`,
