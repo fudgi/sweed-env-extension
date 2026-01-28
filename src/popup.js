@@ -1,3 +1,5 @@
+import "./styles.css";
+
 document.addEventListener("DOMContentLoaded", () => {
   const Env = {
     dev: "dev",
