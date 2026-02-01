@@ -12,6 +12,13 @@ document.addEventListener("DOMContentLoaded", () => {
     curaleaf: "curaleaf",
   };
 
+   const AppPrefix = {
+    shop: "web-ui",
+    cashier: "cashier",
+    kiosk: "web-ui-kiosk",
+    secondScreen: "web-ui-2ndscreen",
+  };
+
   const EnvTheme = {
     [Env.feature]: { color: "var(--bs-info)", text: "var(--bs-black)" },
     [Env.stage]: { color: "#fd7e14", text: "var(--bs-white)" },
@@ -335,14 +342,7 @@ document.addEventListener("DOMContentLoaded", () => {
       id: idInput.value,
       storeId: storeId,
     };
-  };
-
-  const AppPrefix = {
-    shop: "web-ui",
-    cashier: "cashier",
-    kiosk: "web-ui-kiosk",
-    secondScreen: "web-ui-2ndscreen",
-  };
+  }; 
 
   const openApp = (appType) => {
     if (!validateFeatureInputs()) return;
