@@ -30,7 +30,7 @@ body {
   padding: 20px 0;
   writing-mode: vertical-rl;
   text-orientation: mixed;
-  transform: rotate(180deg); /* Rotate to read from bottom to top or adjust as needed */
+  transform: rotate(180deg); 
   text-align: center;
   font-weight: bold;
   color: var(--bs-secondary);
@@ -38,9 +38,8 @@ body {
   transition: all 0.2s ease;
 }
 
-/* Adjust rotation to standard vertical tab style (Top to Bottom) */
 .nav-btn {
-  transform: none; /* Reset rotation if we want top-to-bottom */
+  transform: none; 
 }
 
 .nav-btn:hover {
@@ -54,7 +53,6 @@ body {
   background-color: rgba(var(--bs-primary-rgb), 0.05);
 }
 
-/* History Items */
 .history-link {
   overflow: hidden;
 }
@@ -81,6 +79,12 @@ body {
   opacity: 1;
 }
 
+.input-group-text {
+  width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 h3 {
   margin: 0 0 10px;
