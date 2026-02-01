@@ -152,56 +152,76 @@ document.addEventListener("DOMContentLoaded", () => {
   /* --- History Management --- */
   const MAX_HISTORY_ITEMS = 50;
 
-  const saveHistory = (url) => {
+  const saveHistory = (url, context = {}) => {
     const timestamp = new Date().toISOString();
     chrome.storage?.local.get("history", (data) => {
       let history = data.history || [];
       // Remove duplicates if any (optional, but good for UX)
       history = history.filter((item) => item.url !== url);
       // Add new item to the top
-      history.unshift({ url, timestamp, title: getHistoryTitle(url) });
+      history.unshift({
+        url,
+        timestamp,
+        title: getHistoryTitle(url, context),
+        context,
+      });
       // Limit size
       if (history.length > MAX_HISTORY_ITEMS) {
         history = history.slice(0, MAX_HISTORY_ITEMS);
       }
       chrome.storage?.local.set({ history });
-      // If we are currently on the history view, re-render?
-      // Or just let it update next time user clicks history.
-      // But if user clicks a link from history, we might want to update the view if it stays open?
-      // Usually popup closes on tab open, so it's fine.
     });
   };
 
-  const getHistoryTitle = (url) => {
+  const getHistoryTitle = (url, context) => {
+    if (context && context.appType) {
+      const envName = context.env.toUpperCase();
+      let details = "";
+
+      if (context.env === Env.feature) {
+        details = `${context.project}-${context.id}`;
+      } else {
+        details = envName;
+      }
+
+      switch (context.appType) {
+        case "portal":
+          return `Portal (${details})`;
+        case "shop":
+          return `Shop (${details})`;
+        case "cashier":
+          return `Cashier (${details})`;
+        case "kiosk":
+          return `Kiosk 2.0 (${details})`;
+        case "secondScreen":
+          return `Second Screen (${details})`;
+        default:
+          return `${context.appType} (${details})`;
+      }
+    }
+
     try {
       const urlObj = new URL(url);
-      // Rough heuristic to make friendly titles
-      // e.g. web-ui-kiosk-feature-sweed-123.sweedpos.com -> Kiosk (Feature sweed-123)
       const host = urlObj.hostname;
-      if (host.includes("web-ui-kiosk")) return `Kiosk 2.0 (${getEnvFromHost(host)})`;
-      if (host.includes("web-ui-2ndscreen")) return `Second Screen (${getEnvFromHost(host)})`;
+      if (host.includes("web-ui-kiosk"))
+        return `Kiosk 2.0 (${getEnvFromHost(host)})`;
+      if (host.includes("web-ui-2ndscreen"))
+        return `Second Screen (${getEnvFromHost(host)})`;
       if (host.includes("cashier")) return `Cashier (${getEnvFromHost(host)})`;
       if (host.includes("store.sweedpos.com")) return "Portal (Production)";
-      
-      // Default fallback
+
       return host;
     } catch (e) {
       return url;
     }
   };
 
-  
-
   const getEnvFromHost = (host) => {
     if (host.includes("production")) return "Production";
     if (host.includes("prime")) return "Prime";
     if (host.includes("curaleaf")) return "Curaleaf";
-    // feature-project-id.sweedpos.com
     const parts = host.split("-");
     if (parts.includes("feature")) {
-      // Find 'feature' index and get next parts?
-      // format: app-feature-project-id.sweedpos.com
-      // or feature-project-id.sweedpos.com (portal)
       return "Feature";
     }
     if (host.includes("dev")) return "Dev";
@@ -230,7 +250,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       history.forEach((item, index) => {
         const clone = template.content.cloneNode(true);
-        const li = clone.querySelector(".history-item");
         const titleEl = clone.querySelector(".history-title");
         const urlEl = clone.querySelector(".history-url");
         const timeEl = clone.querySelector(".history-time");
@@ -238,16 +257,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const linkDiv = clone.querySelector(".history-link");
 
         titleEl.textContent = item.title || item.url;
-        urlEl.textContent = item.url;
         
-        // Format relative time (e.g. "Just now", "2 mins ago")
+        // Enhance description with store ID if available
+        let desc = item.url;
+        if (item.context && item.context.storeId) {
+             desc = `Store: ${item.context.storeId} • ${item.url}`;
+        }
+        urlEl.textContent = desc;
+
         if (item.timestamp) {
-           const date = new Date(item.timestamp);
-           timeEl.textContent = date.toLocaleString();
+          const date = new Date(item.timestamp);
+          timeEl.textContent = date.toLocaleString();
         }
 
         linkDiv.addEventListener("click", () => {
-          openTab(item.url); // Use existing openTab which re-saves history (moves to top)
+          openTab(item.url, item.context); 
         });
 
         deleteBtn.addEventListener("click", (e) => {
@@ -342,7 +366,7 @@ document.addEventListener("DOMContentLoaded", () => {
       id: idInput.value,
       storeId: storeId,
     };
-  }; 
+  };
 
   const openApp = (appType) => {
     if (!validateFeatureInputs()) return;
@@ -351,52 +375,71 @@ document.addEventListener("DOMContentLoaded", () => {
     const { project, id, storeId } = getParams();
     const prefix = AppPrefix[appType];
 
+    const context = {
+      appType,
+      env,
+      project,
+      id,
+      storeId,
+    };
+
+    let url = "";
+
     if (appType === "cashier") {
       if (env === Env.prod) {
-        openTab(`https://${prefix}.sweedpos.com/`);
+        url = `https://${prefix}.sweedpos.com/`;
       } else if (env === Env.feature) {
-        openTab(
-          `https://${prefix}-${env}-${project}-${id}.sweedpos.com/logout`,
-        );
+        url = `https://${prefix}-${env}-${project}-${id}.sweedpos.com/logout`;
       } else if (env === Env.prime || env === Env.curaleaf) {
-        openTab(`https://${prefix}-${env}.sweedpos.com/logout`);
+        url = `https://${prefix}-${env}.sweedpos.com/logout`;
       } else {
-        openTab(`https://${prefix}-${env}.sweedpos.com/`);
+        url = `https://${prefix}-${env}.sweedpos.com/`;
       }
+      openTab(url, context);
       return;
     }
 
     if (env === Env.feature) {
-      openTab(
-        `https://${prefix}-${env}-${project}-${id}.sweedpos.com/s${storeId}`,
-      );
+      url = `https://${prefix}-${env}-${project}-${id}.sweedpos.com/s${storeId}`;
     } else if (env === Env.prod) {
-      openTab(`https://${prefix}-production.sweedpos.com/s${storeId}`);
+      url = `https://${prefix}-production.sweedpos.com/s${storeId}`;
     } else if (env === Env.pilot) {
-      openTab(
-        `https://${prefix}-${env}.sweedpos.com/s${storeId}${
-          appType === "kiosk" ? "/welcome" : ""
-        }`,
-      );
+      url = `https://${prefix}-${env}.sweedpos.com/s${storeId}${
+        appType === "kiosk" ? "/welcome" : ""
+      }`;
     } else if (env === Env.prime || env === Env.curaleaf) {
-      openTab(`https://${prefix}-${env}.sweedpos.com/s${storeId}`);
+      url = `https://${prefix}-${env}.sweedpos.com/s${storeId}`;
     } else {
-      openTab(`https://${prefix}-${env}.sweedpos.com/s${storeId}`);
+      url = `https://${prefix}-${env}.sweedpos.com/s${storeId}`;
     }
+
+    openTab(url, context);
   };
 
   portalBtn.addEventListener("click", () => {
     if (!validateFeatureInputs()) return;
 
     const env = getSelectedEnvironment();
-    const { project, id } = getParams();
+    const { project, id, storeId } = getParams();
+    
+    // Portal falls back to store 63 if not specified, but here we just need params for context
+    const context = {
+      appType: "portal",
+      env,
+      project,
+      id,
+      storeId
+    };
+
+    let url = "";
     if (env === Env.feature) {
-      openTab(`https://${env}-${project}-${id}.sweedpos.com`);
+      url = `https://${env}-${project}-${id}.sweedpos.com`;
     } else if (env === Env.prod) {
-      openTab(`https://store.sweedpos.com`);
+      url = `https://store.sweedpos.com`;
     } else {
-      openTab(`https://${env}.sweedpos.com`);
+      url = `https://${env}.sweedpos.com`;
     }
+    openTab(url, context);
   });
 
   shopBtn.addEventListener("click", () => openApp("shop"));
@@ -404,9 +447,9 @@ document.addEventListener("DOMContentLoaded", () => {
   kioskBtn.addEventListener("click", () => openApp("kiosk"));
   secondScreenBtn.addEventListener("click", () => openApp("secondScreen"));
 
-  const openTab = (url) => {
-    console.log(url);
-    saveHistory(url);
+  const openTab = (url, context) => {
+    console.log(url, context);
+    saveHistory(url, context);
     chrome.tabs.create({ url });
   };
 
