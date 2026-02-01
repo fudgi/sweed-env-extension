@@ -1,11 +1,9 @@
 {
   "manifest_version": 3,
   "name": "EnvSwitcher",
-  "version": "2.0",
+  "version": "2.2.0",
   "description": "Open different environments based on the selection",
-  "permissions": [
-    "storage"
-  ],
+  "permissions": ["storage"],
   "action": {
     "default_popup": "popup.html",
     "default_icon": "icon.png"
@@ -17,13 +15,8 @@
   },
   "web_accessible_resources": [
     {
-      "resources": [
-        "css/*",
-        "js/*"
-      ],
-      "matches": [
-        "<all_urls>"
-      ]
+      "resources": ["css/*", "js/*"],
+      "matches": ["<all_urls>"]
     }
   ]
 }
