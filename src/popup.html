@@ -8,200 +8,264 @@
   </head>
 
   <body data-bs-theme="dark">
-    <form class="p-3 m-0 border-0 bd-example m-0 border-0" id="env-form">
-      <div class="row h-100">
-        <!-- LEFT COLUMN: Environments -->
-        <div class="col-4 border-end">
-          <div class="mb-3">
-            <h3 class="d-inline-block">EnvSwitcher</h3>
-            <img
-              class="d-inline-block"
-              src="./icon.png"
-              width="30px"
-              height="30px"
-            />
-          </div>
+    <div class="d-flex h-100">
+      <!-- Main Content Area -->
+      <div class="flex-grow-1 position-relative">
+        <!-- MAIN VIEW -->
+        <div id="main-view" class="h-100 w-100">
+          <form class="border-0 bd-example h-100" id="env-form">
+            <div class="row h-100">
+              <!-- LEFT COLUMN: Environments -->
+              <div class="col-4 border-end">
+                <div class="mb-2">
+                  <h3 class="d-inline-block">EnvSwitcher</h3>
+                  <img
+                    class="d-inline-block"
+                    src="./icon.png"
+                    width="30px"
+                    height="30px"
+                  />
+                </div>
 
-          <h6 class="text-uppercase text-body-secondary mb-2">Development</h6>
-          <div class="d-grid gap-2 mb-4">
-            <input
-              type="radio"
-              class="btn-check"
-              name="environment"
-              value="feature"
-              id="feature"
-              autocomplete="off"
-            />
-            <label
-              class="btn btn-outline-info w-100 text-start ps-3"
-              for="feature"
-              >FEATURE</label
-            >
+                <h6 class="text-uppercase text-body-secondary mb-2">
+                  Development
+                </h6>
+                <div class="d-grid gap-2 mb-2">
+                  <input
+                    type="radio"
+                    class="btn-check"
+                    name="environment"
+                    value="feature"
+                    id="feature"
+                    autocomplete="off"
+                  />
+                  <label
+                    class="btn btn-outline-info w-100 text-start ps-3"
+                    for="feature"
+                    >FEATURE</label
+                  >
 
-            <input
-              type="radio"
-              class="btn-check"
-              name="environment"
-              value="stage"
-              id="stage"
-              autocomplete="off"
-            />
-            <label
-              class="btn btn-outline-orange w-100 text-start ps-3"
-              for="stage"
-              >STAGE</label
-            >
+                  <input
+                    type="radio"
+                    class="btn-check"
+                    name="environment"
+                    value="stage"
+                    id="stage"
+                    autocomplete="off"
+                  />
+                  <label
+                    class="btn btn-outline-orange w-100 text-start ps-3"
+                    for="stage"
+                    >STAGE</label
+                  >
 
-            <input
-              type="radio"
-              class="btn-check"
-              name="environment"
-              value="dev"
-              id="dev"
-              autocomplete="off"
-            />
-            <label
-              class="btn btn-outline-purple w-100 text-start ps-3"
-              for="dev"
-              >DEV</label
-            >
+                  <input
+                    type="radio"
+                    class="btn-check"
+                    name="environment"
+                    value="dev"
+                    id="dev"
+                    autocomplete="off"
+                  />
+                  <label
+                    class="btn btn-outline-purple w-100 text-start ps-3"
+                    for="dev"
+                    >DEV</label
+                  >
 
-            <input
-              type="radio"
-              class="btn-check"
-              name="environment"
-              value="demo"
-              id="demo"
-              autocomplete="off"
-            />
-            <label
-              class="btn btn-outline-warning w-100 text-start ps-3"
-              for="demo"
-              >DEMO</label
-            >
+                  <input
+                    type="radio"
+                    class="btn-check"
+                    name="environment"
+                    value="demo"
+                    id="demo"
+                    autocomplete="off"
+                  />
+                  <label
+                    class="btn btn-outline-warning w-100 text-start ps-3"
+                    for="demo"
+                    >DEMO</label
+                  >
 
-            <input
-              type="radio"
-              class="btn-check"
-              name="environment"
-              value="pilot"
-              id="pilot"
-              autocomplete="off"
-            />
-            <label
-              class="btn btn-outline-light w-100 text-start ps-3"
-              for="pilot"
-              >PILOT</label
-            >
-          </div>
+                  <input
+                    type="radio"
+                    class="btn-check"
+                    name="environment"
+                    value="pilot"
+                    id="pilot"
+                    autocomplete="off"
+                  />
+                  <label
+                    class="btn btn-outline-light w-100 text-start ps-3"
+                    for="pilot"
+                    >PILOT</label
+                  >
+                </div>
 
-          <div class="divider-m"></div>
+                <div class="divider-m"></div>
 
-          <h6 class="text-uppercase text-body-secondary mb-2">Live</h6>
-          <div class="d-grid gap-2">
-            <input
-              type="radio"
-              class="btn-check"
-              name="environment"
-              value="prod"
-              id="prod"
-              autocomplete="off"
-            />
-            <label
-              class="btn btn-outline-primary w-100 text-start ps-3"
-              for="prod"
-              >PRODUCTION</label
-            >
+                <h6 class="text-uppercase text-body-secondary">Live</h6>
+                <div class="d-grid gap-2">
+                  <input
+                    type="radio"
+                    class="btn-check"
+                    name="environment"
+                    value="prod"
+                    id="prod"
+                    autocomplete="off"
+                  />
+                  <label
+                    class="btn btn-outline-primary w-100 text-start ps-3"
+                    for="prod"
+                    >PRODUCTION</label
+                  >
 
-            <input
-              type="radio"
-              class="btn-check"
-              name="environment"
-              value="prime"
-              id="prime"
-              autocomplete="off"
-            />
-            <label
-              class="btn btn-outline-danger w-100 text-start ps-3"
-              for="prime"
-              >PRIME</label
-            >
+                  <input
+                    type="radio"
+                    class="btn-check"
+                    name="environment"
+                    value="prime"
+                    id="prime"
+                    autocomplete="off"
+                  />
+                  <label
+                    class="btn btn-outline-danger w-100 text-start ps-3"
+                    for="prime"
+                    >PRIME</label
+                  >
 
-            <input
-              type="radio"
-              class="btn-check"
-              name="environment"
-              value="curaleaf"
-              id="curaleaf"
-              autocomplete="off"
-            />
-            <label
-              class="btn btn-outline-success w-100 text-start ps-3"
-              for="curaleaf"
-              >CURALEAF</label
-            >
-          </div>
+                  <input
+                    type="radio"
+                    class="btn-check"
+                    name="environment"
+                    value="curaleaf"
+                    id="curaleaf"
+                    autocomplete="off"
+                  />
+                  <label
+                    class="btn btn-outline-success w-100 text-start ps-3"
+                    for="curaleaf"
+                    >CURALEAF</label
+                  >
+                </div>
+              </div>
+
+              <!-- RIGHT COLUMN: Content -->
+              <div class="col-8 d-flex flex-column">
+                <div class="d-flex flex-wrap gap-2">
+                  <button type="button" class="btn btn-theme" id="portal-btn">
+                    Portal
+                  </button>
+                  <button type="button" class="btn btn-theme" id="cashier-btn">
+                    Cashier
+                  </button>
+                  <button type="button" class="btn btn-theme" id="shop-btn">
+                    Shop
+                  </button>
+                  <button type="button" class="btn btn-theme" id="kiosk-btn">
+                    Kiosk 2.0
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-theme"
+                    id="second-screen-btn"
+                  >
+                    Second Screen
+                  </button>
+                </div>
+
+                <div class="divider-m"></div>
+
+                <div id="feature-options" style="display: none" class="mb-4">
+                  <div class="input-group mb-3">
+                    <span class="input-group-text">Project</span>
+                    <input
+                      id="project-name"
+                      name="project"
+                      type="text"
+                      class="form-control"
+                      placeholder="e.g. ecom, ci, sweed"
+                    />
+                  </div>
+
+                  <div class="input-group">
+                    <span class="input-group-text" id="feature-id-span"
+                      >Ticket</span
+                    >
+                    <input
+                      id="feature-id"
+                      name="id"
+                      type="number"
+                      class="form-control"
+                      placeholder="Feature Number"
+                    />
+                  </div>
+                </div>
+
+                <div class="input-group mb-auto">
+                  <span class="input-group-text" id="store-id-span">Store</span>
+                  <input
+                    id="store-id"
+                    name="store-id"
+                    type="number"
+                    class="form-control"
+                    placeholder="Store #"
+                  />
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
 
-        <!-- RIGHT COLUMN: Content -->
-        <div class="col-8 d-flex flex-column">
-          <div class="d-flex flex-wrap gap-2">
-            <button type="button" class="btn btn-theme" id="portal-btn">
-              Portal
-            </button>
-            <button type="button" class="btn btn-theme" id="cashier-btn">
-              Cashier
-            </button>
-            <button type="button" class="btn btn-theme" id="shop-btn">
-              Shop
-            </button>
-            <button type="button" class="btn btn-theme" id="kiosk-btn">
-              Kiosk 2.0
-            </button>
-            <button type="button" class="btn btn-theme" id="second-screen-btn">
-              Second Screen
+        <!-- HISTORY VIEW -->
+        <div id="history-view" class="h-100 w-100 p-4 y-hidden x-hidden">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="m-0">History</h4>
+            <button
+              id="clear-history-btn"
+              class="btn btn-sm btn-outline-danger"
+            >
+              Clear
             </button>
           </div>
-
-          <div class="divider-m"></div>
-
-          <div id="feature-options" style="display: none" class="mb-4">
-            <div class="input-group mb-3">
-              <span class="input-group-text">Project</span>
-              <input
-                id="project-name"
-                name="project"
-                type="text"
-                class="form-control"
-                placeholder="e.g. ecom, ci, sweed"
-              />
-            </div>
-
-            <div class="input-group">
-              <span class="input-group-text" id="feature-id-span">Ticket</span>
-              <input
-                id="feature-id"
-                name="id"
-                type="number"
-                class="form-control"
-                placeholder="Feature Number"
-              />
-            </div>
+          <div id="history-list-container" class="h-100 overflow-y-auto">
+            <ul id="history-list" class="list-group">
+              <!-- History items will be injected here -->
+            </ul>
           </div>
-
-          <div class="input-group mb-auto">
-            <span class="input-group-text" id="store-id-span">Store</span>
-            <input
-              id="store-id"
-              name="store-id"
-              type="number"
-              class="form-control"
-              placeholder="Store #"
-            />
+          <div id="history-empty" class="text-center text-muted mt-5 x-hidden">
+            No history yet.
           </div>
         </div>
       </div>
-    </form>
+
+      <!-- Right Sidebar Navigation -->
+      <nav
+        class="nav-vertical border-start d-flex flex-column bg-body-tertiary"
+      >
+        <button class="nav-btn active" data-target="main-view">MAIN</button>
+        <button class="nav-btn" data-target="history-view">HISTORY</button>
+      </nav>
+    </div>
+
+    <!-- Template for history item -->
+    <template id="history-item-template">
+      <li
+        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center history-item p-2"
+      >
+        <div class="flex-grow-1 me-2 text-truncate history-link" role="button">
+          <div class="fw-bold history-title text-truncate"></div>
+          <div class="small text-muted text-truncate history-url"></div>
+          <div class="small text-secondary history-time"></div>
+        </div>
+        <button
+          class="btn btn-sm btn-outline-secondary history-delete-btn"
+          title="Remove from history"
+        >
+          &times;
+        </button>
+      </li>
+    </template>
 
     <script type="module" src="./popup.js"></script>
   </body>

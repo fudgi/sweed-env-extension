@@ -142,10 +142,163 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   storeInput.addEventListener("input", saveState);
 
-  const openTab = (url) => {
-    console.log(url);
-    chrome.tabs.create({ url });
+  /* --- History Management --- */
+  const MAX_HISTORY_ITEMS = 50;
+
+  const saveHistory = (url) => {
+    const timestamp = new Date().toISOString();
+    chrome.storage?.local.get("history", (data) => {
+      let history = data.history || [];
+      // Remove duplicates if any (optional, but good for UX)
+      history = history.filter((item) => item.url !== url);
+      // Add new item to the top
+      history.unshift({ url, timestamp, title: getHistoryTitle(url) });
+      // Limit size
+      if (history.length > MAX_HISTORY_ITEMS) {
+        history = history.slice(0, MAX_HISTORY_ITEMS);
+      }
+      chrome.storage?.local.set({ history });
+      // If we are currently on the history view, re-render?
+      // Or just let it update next time user clicks history.
+      // But if user clicks a link from history, we might want to update the view if it stays open?
+      // Usually popup closes on tab open, so it's fine.
+    });
   };
+
+  const getHistoryTitle = (url) => {
+    try {
+      const urlObj = new URL(url);
+      // Rough heuristic to make friendly titles
+      // e.g. web-ui-kiosk-feature-sweed-123.sweedpos.com -> Kiosk (Feature sweed-123)
+      const host = urlObj.hostname;
+      if (host.includes("web-ui-kiosk")) return `Kiosk 2.0 (${getEnvFromHost(host)})`;
+      if (host.includes("web-ui-2ndscreen")) return `Second Screen (${getEnvFromHost(host)})`;
+      if (host.includes("cashier")) return `Cashier (${getEnvFromHost(host)})`;
+      if (host.includes("store.sweedpos.com")) return "Portal (Production)";
+      
+      // Default fallback
+      return host;
+    } catch (e) {
+      return url;
+    }
+  };
+
+  
+
+  const getEnvFromHost = (host) => {
+    if (host.includes("production")) return "Production";
+    if (host.includes("prime")) return "Prime";
+    if (host.includes("curaleaf")) return "Curaleaf";
+    // feature-project-id.sweedpos.com
+    const parts = host.split("-");
+    if (parts.includes("feature")) {
+      // Find 'feature' index and get next parts?
+      // format: app-feature-project-id.sweedpos.com
+      // or feature-project-id.sweedpos.com (portal)
+      return "Feature";
+    }
+    if (host.includes("dev")) return "Dev";
+    if (host.includes("stage")) return "Stage";
+    if (host.includes("demo")) return "Demo";
+    if (host.includes("pilot")) return "Pilot";
+    return "Unknown";
+  };
+
+  const renderHistory = () => {
+    const historyList = document.getElementById("history-list");
+    const emptyMsg = document.getElementById("history-empty");
+    const template = document.getElementById("history-item-template");
+
+    if (!historyList || !template) return;
+
+    chrome.storage?.local.get("history", (data) => {
+      const history = data.history || [];
+      historyList.innerHTML = "";
+
+      if (history.length === 0) {
+        emptyMsg.classList.remove("x-hidden");
+        return;
+      }
+      emptyMsg.classList.add("x-hidden");
+
+      history.forEach((item, index) => {
+        const clone = template.content.cloneNode(true);
+        const li = clone.querySelector(".history-item");
+        const titleEl = clone.querySelector(".history-title");
+        const urlEl = clone.querySelector(".history-url");
+        const timeEl = clone.querySelector(".history-time");
+        const deleteBtn = clone.querySelector(".history-delete-btn");
+        const linkDiv = clone.querySelector(".history-link");
+
+        titleEl.textContent = item.title || item.url;
+        urlEl.textContent = item.url;
+        
+        // Format relative time (e.g. "Just now", "2 mins ago")
+        if (item.timestamp) {
+           const date = new Date(item.timestamp);
+           timeEl.textContent = date.toLocaleString();
+        }
+
+        linkDiv.addEventListener("click", () => {
+          openTab(item.url); // Use existing openTab which re-saves history (moves to top)
+        });
+
+        deleteBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          removeFromHistory(index);
+        });
+
+        historyList.appendChild(clone);
+      });
+    });
+  };
+
+  const removeFromHistory = (index) => {
+    chrome.storage?.local.get("history", (data) => {
+      const history = data.history || [];
+      history.splice(index, 1);
+      chrome.storage?.local.set({ history }, renderHistory);
+    });
+  };
+
+  const clearHistoryBtn = document.getElementById("clear-history-btn");
+  if (clearHistoryBtn) {
+    clearHistoryBtn.addEventListener("click", () => {
+      if (confirm("Clear all history?")) {
+        chrome.storage?.local.set({ history: [] }, renderHistory);
+      }
+    });
+  }
+
+  /* --- Tab Switching --- */
+  const navBtns = document.querySelectorAll(".nav-btn");
+  navBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const targetId = btn.getAttribute("data-target");
+
+      // Toggle Active Class
+      navBtns.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      // Toggle Views
+      document.getElementById("main-view").classList.add("x-hidden");
+      document.getElementById("history-view").classList.add("x-hidden");
+
+      const targetView = document.getElementById(targetId);
+      if (targetView) targetView.classList.remove("x-hidden");
+
+      // If switching to history, render it
+      if (targetId === "history-view") {
+        renderHistory();
+      }
+
+      // Save Last Active Tab
+      const lastTab = targetId;
+      chrome.storage?.local.set({ lastTab });
+    });
+  });
+
+  /* --- Existing Logic Updates --- */
 
   const validateFeatureInputs = () => {
     const env = getSelectedEnvironment();
@@ -250,5 +403,28 @@ document.addEventListener("DOMContentLoaded", () => {
   cashierBtn.addEventListener("click", () => openApp("cashier"));
   kioskBtn.addEventListener("click", () => openApp("kiosk"));
   secondScreenBtn.addEventListener("click", () => openApp("secondScreen"));
+
+  const openTab = (url) => {
+    console.log(url);
+    saveHistory(url);
+    chrome.tabs.create({ url });
+  };
+
+  // Restore active tab
+  const restoreLastTab = () => {
+    chrome.storage?.local.get("lastTab", (data) => {
+      if (data.lastTab) {
+        const targetBtn = document.querySelector(
+          `.nav-btn[data-target="${data.lastTab}"]`,
+        );
+        if (targetBtn) {
+          targetBtn.click();
+        }
+      }
+    });
+  };
+
+  // Restore State needs to ensure Main tab is visible by default? It is by HTML default structure.
   restoreState();
+  restoreLastTab();
 });

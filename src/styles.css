@@ -1,12 +1,71 @@
 body {
   font-family: Arial, sans-serif;
-  padding: 10px;
   width: 780px;
   max-width: 800px;
   max-height: 600px;
   height: 550px;
   filter: brightness(0.9) grayscale(0.2);
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevent body scroll, handle in inner divs */
 }
+
+#history-list-container {
+  max-height: 450px;
+}
+
+/* Vertical Navigation */
+.nav-vertical {
+  width: 50px;
+  min-width: 50px;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  border-left: 3px solid transparent;
+  width: 100%;
+  padding: 20px 0;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg); /* Rotate to read from bottom to top or adjust as needed */
+  text-align: center;
+  font-weight: bold;
+  color: var(--bs-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Adjust rotation to standard vertical tab style (Top to Bottom) */
+.nav-btn {
+  transform: none; /* Reset rotation if we want top-to-bottom */
+}
+
+.nav-btn:hover {
+  background-color: rgba(var(--bs-secondary-rgb), 0.1);
+  color: var(--bs-body-color);
+}
+
+.nav-btn.active {
+  border-left-color: var(--theme-color);
+  color: var(--theme-color);
+  background-color: rgba(var(--bs-primary-rgb), 0.05);
+}
+
+/* History Items */
+.history-link {
+  overflow: hidden;
+}
+
+.history-delete-btn {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.history-item:hover .history-delete-btn {
+  opacity: 1;
+}
+
 
 h3 {
   margin: 0 0 10px;
@@ -15,15 +74,6 @@ h3 {
 form {
   display: flex;
   flex-direction: column;
-}
-
-label {
-  margin-bottom: 5px;
-}
-
-button {
-  margin-top: 10px;
-  padding: 5px;
 }
 
 .divider-s {
