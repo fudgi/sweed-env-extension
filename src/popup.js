@@ -179,7 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
       let details = "";
 
       if (context.env === Env.feature) {
-        details = `${context.project}-${context.id}`;
+        details = `${envName} ${context.project}-${context.id}`;
       } else {
         details = envName;
       }
@@ -265,9 +265,25 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         urlEl.textContent = desc;
 
+        // Colorize based on environment
+        if (item.context && item.context.env) {
+           const theme = EnvTheme[item.context.env] || EnvTheme[Env.dev];
+           const li = clone.querySelector("li");
+           if (li) {
+             li.style.borderLeft = `4px solid ${theme.color}`;
+             li.style.color = theme.color;
+           }
+        }
+
         if (item.timestamp) {
           const date = new Date(item.timestamp);
-          timeEl.textContent = date.toLocaleString();
+          timeEl.textContent = date.toLocaleString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          });
         }
 
         linkDiv.addEventListener("click", () => {
@@ -448,7 +464,6 @@ document.addEventListener("DOMContentLoaded", () => {
   secondScreenBtn.addEventListener("click", () => openApp("secondScreen"));
 
   const openTab = (url, context) => {
-    console.log(url, context);
     saveHistory(url, context);
     chrome.tabs.create({ url });
   };
