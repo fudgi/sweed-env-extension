@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
     <title>EnvSwitcher</title>
@@ -229,7 +229,10 @@
             </button>
           </div>
           <div id="history-list-container" class="h-100 overflow-y-auto">
-            <div id="history-empty" class="text-center text-muted mt-5 x-hidden">
+            <div
+              id="history-empty"
+              class="text-center text-muted mt-5 x-hidden"
+            >
               No history yet.
             </div>
             <ul id="history-list" class="list-group">
@@ -258,12 +261,22 @@
           <div class="small text-muted text-truncate history-url"></div>
           <div class="small text-secondary history-time"></div>
         </div>
-        <button
-          class="btn btn-sm btn-outline-secondary history-delete-btn"
-          title="Remove from history"
-        >
-          &times;
-        </button>
+        <div class="d-flex align-items-center gap-2">
+          <button
+            class="btn btn-sm btn-link p-0 history-favourite-btn text-warning"
+            type="button"
+            title="Toggle favourite"
+            aria-label="Toggle favourite"
+          >
+            <span class="history-favourite-icon"></span>
+          </button>
+          <button
+            class="btn btn-sm btn-outline-secondary history-delete-btn"
+            title="Remove from history"
+          >
+            &times;
+          </button>
+        </div>
       </li>
     </template>
 

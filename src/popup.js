@@ -158,18 +158,41 @@ document.addEventListener("DOMContentLoaded", () => {
       let history = data.history || [];
       // Remove duplicates if any (optional, but good for UX)
       history = history.filter((item) => item.url !== url);
-      // Add new item to the top
+      // Add new item to the top (favourite: false by default)
       history.unshift({
         url,
         timestamp,
         title: getHistoryTitle(url, context),
         context,
+        favourite: false,
       });
       // Limit size
       if (history.length > MAX_HISTORY_ITEMS) {
         history = history.slice(0, MAX_HISTORY_ITEMS);
       }
       chrome.storage?.local.set({ history });
+    });
+  };
+
+  const toggleFavourite = (item) => {
+    chrome.storage?.local.get("history", (data) => {
+      const history = data.history || [];
+      const index = history.findIndex(
+        (h) => h.url === item.url && h.timestamp === item.timestamp,
+      );
+      if (index === -1) return;
+      history[index].favourite = !history[index].favourite;
+      chrome.storage?.local.set({ history }, renderHistory);
+    });
+  };
+
+  const sortHistoryWithFavouritesFirst = (history) => {
+    return [...history].sort((a, b) => {
+      const aFav = Boolean(a.favourite);
+      const bFav = Boolean(b.favourite);
+      if (aFav && !bFav) return -1;
+      if (!aFav && bFav) return 1;
+      return new Date(b.timestamp) - new Date(a.timestamp);
     });
   };
 
@@ -239,7 +262,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!historyList || !template) return;
 
     chrome.storage?.local.get("history", (data) => {
-      const history = data.history || [];
+      const rawHistory = data.history || [];
+      const history = sortHistoryWithFavouritesFirst(rawHistory);
       historyList.innerHTML = "";
 
       if (history.length === 0) {
@@ -248,31 +272,33 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       emptyMsg.classList.add("x-hidden");
 
-      history.forEach((item, index) => {
+      history.forEach((item) => {
         const clone = template.content.cloneNode(true);
         const titleEl = clone.querySelector(".history-title");
         const urlEl = clone.querySelector(".history-url");
         const timeEl = clone.querySelector(".history-time");
         const deleteBtn = clone.querySelector(".history-delete-btn");
+        const favouriteBtn = clone.querySelector(".history-favourite-btn");
+        const favouriteIcon = clone.querySelector(".history-favourite-icon");
         const linkDiv = clone.querySelector(".history-link");
 
         titleEl.textContent = item.title || item.url;
-        
+
         // Enhance description with store ID if available
         let desc = item.url;
         if (item.context && item.context.storeId) {
-             desc = `Store: ${item.context.storeId} • ${item.url}`;
+          desc = `Store: ${item.context.storeId} • ${item.url}`;
         }
         urlEl.textContent = desc;
 
         // Colorize based on environment
         if (item.context && item.context.env) {
-           const theme = EnvTheme[item.context.env] || EnvTheme[Env.dev];
-           const li = clone.querySelector("li");
-           if (li) {
-             li.style.borderLeft = `4px solid ${theme.color}`;
-             li.style.color = theme.color;
-           }
+          const theme = EnvTheme[item.context.env] || EnvTheme[Env.dev];
+          const li = clone.querySelector("li");
+          if (li) {
+            li.style.borderLeft = `4px solid ${theme.color}`;
+            li.style.color = theme.color;
+          }
         }
 
         if (item.timestamp) {
@@ -286,13 +312,24 @@ document.addEventListener("DOMContentLoaded", () => {
           });
         }
 
+        // Favourite button: star filled when favourite, outline when not
+        const isFavourite = Boolean(item.favourite);
+        favouriteIcon.textContent = isFavourite ? "★" : "☆";
+        favouriteBtn.classList.toggle("text-warning", isFavourite);
+        favouriteBtn.classList.toggle("text-secondary", !isFavourite);
+
+        favouriteBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          toggleFavourite(item);
+        });
+
         linkDiv.addEventListener("click", () => {
-          openTab(item.url, item.context); 
+          openTab(item.url, item.context);
         });
 
         deleteBtn.addEventListener("click", (e) => {
           e.stopPropagation();
-          removeFromHistory(index);
+          removeFromHistory(item);
         });
 
         historyList.appendChild(clone);
@@ -300,9 +337,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
-  const removeFromHistory = (index) => {
+  const removeFromHistory = (item) => {
     chrome.storage?.local.get("history", (data) => {
       const history = data.history || [];
+      const index = history.findIndex(
+        (h) => h.url === item.url && h.timestamp === item.timestamp,
+      );
+      if (index === -1) return;
       history.splice(index, 1);
       chrome.storage?.local.set({ history }, renderHistory);
     });
