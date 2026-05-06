@@ -42,13 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const storeInput = document.getElementById("store-id");
   const projectInput = document.getElementById("project-name");
 
-  const actionButtons = [
-    portalBtn,
-    cashierBtn,
-    shopBtn,
-    kioskBtn,
-    secondScreenBtn,
-  ];
+  let storeIdByEnv = {};
 
   const updateActionButtons = () => {
     const env =
@@ -62,14 +56,16 @@ document.addEventListener("DOMContentLoaded", () => {
       theme.text,
     );
 
-    // Disable buttons if feature env and missing project/ticket
-    const shouldDisable =
+    const featureMissing =
       env === Env.feature &&
       (!projectInput.value.trim() || !idInput.value.trim());
+    const storeIdMissing = !storeInput.value.trim();
 
-    actionButtons.forEach((btn) => {
-      btn.disabled = shouldDisable;
-    });
+    portalBtn.disabled = featureMissing;
+    cashierBtn.disabled = featureMissing;
+    shopBtn.disabled = featureMissing || storeIdMissing;
+    kioskBtn.disabled = featureMissing || storeIdMissing;
+    secondScreenBtn.disabled = featureMissing || storeIdMissing;
   };
 
   const saveState = () => {
@@ -77,11 +73,13 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    const env = envForm.environment.value;
+    storeIdByEnv[env] = storeInput.value;
     const state = {
-      environment: envForm.environment.value,
+      environment: env,
       project: projectInput.value,
       id: idInput.value,
-      storeId: storeInput.value,
+      storeId: storeIdByEnv,
     };
     chrome.storage.local.set({ state });
   };
@@ -91,21 +89,28 @@ document.addEventListener("DOMContentLoaded", () => {
       document.querySelector(
         `input[name="environment"][value="${Env.dev}"]`,
       ).checked = true;
-      storeInput.value = "63";
       updateActionButtons();
       return;
     }
 
     chrome.storage?.local.get("state", (data) => {
+      const stored = data.state?.storeId;
+      storeIdByEnv =
+        stored && typeof stored === "object" && !Array.isArray(stored)
+          ? stored
+          : {};
+
       if (data.state) {
-        if (data.state.environment) {
+        const env = data.state.environment;
+        if (env) {
           const radio = document.querySelector(
-            `input[name="environment"][value="${data.state.environment}"]`,
+            `input[name="environment"][value="${env}"]`,
           );
           if (radio) radio.checked = true;
-          if (data.state.environment === Env.feature) {
+          if (env === Env.feature) {
             featureOptions.style.display = "block";
           }
+          storeInput.value = storeIdByEnv[env] ?? "";
         }
         if (data.state.project) {
           projectInput.value = data.state.project;
@@ -113,15 +118,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (data.state.id) {
           idInput.value = data.state.id;
         }
-        if (data.state.storeId) {
-          storeInput.value = data.state.storeId;
-        }
         updateActionButtons();
       } else {
         document.querySelector(
           `input[name="environment"][value="${Env.dev}"]`,
         ).checked = true;
-        storeInput.value = "63";
         updateActionButtons();
       }
     });
@@ -131,6 +132,8 @@ document.addEventListener("DOMContentLoaded", () => {
     radio.addEventListener("change", () => {
       featureOptions.style.display =
         radio.value === Env.feature ? "block" : "none";
+
+      storeInput.value = storeIdByEnv[radio.value] ?? "";
 
       updateActionButtons();
       saveState();
@@ -147,7 +150,10 @@ document.addEventListener("DOMContentLoaded", () => {
     updateActionButtons();
     saveState();
   });
-  storeInput.addEventListener("input", saveState);
+  storeInput.addEventListener("input", () => {
+    updateActionButtons();
+    saveState();
+  });
 
   /* --- History Management --- */
   const MAX_HISTORY_ITEMS = 50;
@@ -416,12 +422,10 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const getParams = () => {
-    let storeId = storeInput.value;
-    if (!storeId) storeId = "63";
     return {
       project: projectInput.value,
       id: idInput.value,
-      storeId: storeId,
+      storeId: storeInput.value,
     };
   };
 
