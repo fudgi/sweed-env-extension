@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const envForm = document.getElementById("env-form");
   const featureOptions = document.getElementById("feature-options");
   const portalBtn = document.getElementById("portal-btn");
+  const adminPanelBtn = document.getElementById("admin-panel-btn");
   const cashierBtn = document.getElementById("cashier-btn");
   const shopBtn = document.getElementById("shop-btn");
   const kioskBtn = document.getElementById("kiosk-btn");
@@ -62,6 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const storeIdMissing = !storeInput.value.trim();
 
     portalBtn.disabled = featureMissing;
+    adminPanelBtn.disabled = featureMissing;
     cashierBtn.disabled = featureMissing;
     shopBtn.disabled = featureMissing || storeIdMissing;
     kioskBtn.disabled = featureMissing || storeIdMissing;
@@ -216,6 +218,8 @@ document.addEventListener("DOMContentLoaded", () => {
       switch (context.appType) {
         case "portal":
           return `Portal (${details})`;
+        case "adminPanel":
+          return `Admin panel (${details})`;
         case "shop":
           return `Shop (${details})`;
         case "cashier":
@@ -232,6 +236,10 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const urlObj = new URL(url);
       const host = urlObj.hostname;
+      if (host.includes("admin-panel")) {
+        if (host === "admin-panel.sweedpos.com") return "Admin panel (Production)";
+        return `Admin panel (${getEnvFromHost(host)})`;
+      }
       if (host.includes("web-ui-kiosk"))
         return `Kiosk 2.0 (${getEnvFromHost(host)})`;
       if (host.includes("web-ui-2ndscreen"))
@@ -499,6 +507,38 @@ document.addEventListener("DOMContentLoaded", () => {
       url = `https://store.sweedpos.com`;
     } else {
       url = `https://${env}.sweedpos.com`;
+    }
+    openTab(url, context);
+  });
+
+  adminPanelBtn.addEventListener("click", () => {
+    if (!validateFeatureInputs()) return;
+
+    const env = getSelectedEnvironment();
+    const { project, id, storeId } = getParams();
+
+    const context = {
+      appType: "adminPanel",
+      env,
+      project,
+      id,
+      storeId,
+    };
+
+    let url = "";
+    if (env === Env.feature) {
+      url = `https://admin-panel-feature-${project}-${id}.sweedpos.com/`;
+    } else if (env === Env.prod) {
+      url = `https://admin-panel.sweedpos.com/`;
+    } else if (
+      env === Env.prime ||
+      env === Env.curaleaf ||
+      env === Env.pilot ||
+      env === Env.demo
+    ) {
+      url = `https://admin-panel.${env}.sweedpos.com/`;
+    } else {
+      url = `https://admin-panel-${env}.sweedpos.com/`;
     }
     openTab(url, context);
   });

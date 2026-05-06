@@ -7,7 +7,7 @@ A Chrome extension (Manifest V3) for quickly opening **Sweed** web apps in the r
 - **Environments** — Development: Feature, Stage, Dev, Demo, Pilot. Live: Production, Prime, Curaleaf.
 - **Feature mode** — When Feature is selected, enter **Project** and **Ticket** (feature number); those values are required before opening apps.
 - **Store** — Store ID is used for shop, cashier, kiosk, and second-screen URLs (defaults are applied where the UI does).
-- **Shortcuts** — Portal, Cashier, Shop, Kiosk 2.0, Second Screen: each builds the correct host/path for the selected environment.
+- **Shortcuts** — Portal, Admin panel, Cashier, Shop, Kiosk 2.0, Second Screen: each builds the correct host/path for the selected environment.
 - **Persistence** — Selected environment, project, ticket, store, and last sidebar tab are saved with `chrome.storage.local`.
 - **History** — Every opened URL is recorded (up to 50 entries). From the History tab you can:
   - Open an entry again
